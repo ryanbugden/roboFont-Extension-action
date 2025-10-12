@@ -9,6 +9,9 @@ inputs:
     required: false
     description: 'Create a tag when the version changes in the info.yaml.'
     default: false
+  prebuild:
+    description: 'Optional shell script to run before build'
+    required: false
 
 runs:
   using: composite
@@ -17,6 +20,11 @@ runs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
+
+    - name: Prebuild script
+      if: inputs.prebuild
+      shell: bash
+      run: ${{ inputs.prebuild }}
 
     - name: Read yaml
       if: inputs.autotagging
